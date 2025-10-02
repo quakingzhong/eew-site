@@ -213,9 +213,9 @@
             `.trim();
 
             // 关键：发送请求到GitHub Issues（需替换为你的仓库信息）
-            const GITHUB_TOKEN = '你的GitHub Personal Access Token'; // 后面教程教你获取
-            const REPO_OWNER = '你的GitHub用户名'; // 如：github
-            const REPO_NAME = '你的仓库名'; // 如：eew-site
+            const GITHUB_TOKEN = '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';
+            const REPO_OWNER = 'quakingzhong';
+            const REPO_NAME = 'eew-site'; 
 
             try {
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
