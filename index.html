@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEW整合站</title>
+    <style>
+        /* 全局样式：简约浅色 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #f8f9fa; padding: 20px; }
+        
+        /* 弹窗样式 */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px;
+            text-align: center; line-height: 1.8;
+        }
+        .modal-btn {
+            margin-top: 20px; padding: 8px 20px; border: none; border-radius: 4px;
+            background: #007bff; color: white; cursor: pointer; margin-left: 10px;
+        }
+
+        /* 功能框容器 */
+        .box-container {
+            max-width: 1200px; margin: 0 auto; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;
+        }
+        
+        /* 功能框样式 */
+        .box {
+            background: white; padding: 25px; border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .box:hover { transform: translateY(-3px); }
+        .box h2 { font-size: 22px; color: #333; margin-bottom: 8px; }
+        .box p { font-size: 14px; color: #666; }
+
+        /* 投稿按钮 */
+        .submit-btn {
+            display: block; margin: 30px auto; padding: 10px 25px;
+            background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;
+        }
+
+        /* 关于弹窗和投稿弹窗通用样式 */
+        .hidden { display: none; }
+        .form-group { margin: 15px 0; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; color: #333; }
+        .form-group input {
+            width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group .required { color: red; }
+    </style>
+</head>
+<body>
+    <!-- 进入弹窗 -->
+    <div id="entryModal" class="modal">
+        <div class="modal-content">
+            本网站为个人所建，与本网站提及到的app的官方无关，确认跳转后出现的任何问题与原作者无关
+            <button id="entryBtn" class="modal-btn">确认进入</button>
+        </div>
+    </div>
+
+    <!-- 关于弹窗 -->
+    <div id="aboutModal" class="modal hidden">
+        <div class="modal-content">
+            <p>作者：quaking中..</p>
+            <p>更多eew软件还在收录中，敬请期待！</p>
+            <p>欢迎来投稿更多的eew软件！</p>
+            <p>随时联系我们！抖音号：VOLVO.s60</p>
+            <p>以下是相关的eew收集网站↓</p>
+            <button id="closeAbout" class="modal-btn">关闭</button>
+            <a href="https://eewapp.top" target="_blank"><button class="modal-btn">跳转至EEWapp网站</button></a>
+        </div>
+    </div>
+
+    <!-- 投稿弹窗 -->
+    <div id="submitModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>EEW软件投稿</h3>
+            <form id="submitForm">
+                <div class="form-group">
+                    <label>软件名称 <span class="required">*</span></label>
+                    <input type="text" id="appName" required placeholder="如：eewcn">
+                </div>
+                <div class="form-group">
+                    <label>软件版本号（选填）</label>
+                    <input type="text" id="appVersion" placeholder="如：v1.0.0">
+                </div>
+                <div class="form-group">
+                    <label>投稿用户名（选填）</label>
+                    <input type="text" id="submitterName" placeholder="如：张三">
+                </div>
+                <div class="form-group">
+                    <label>下载链接 <span class="required">*</span></label>
+                    <input type="url" id="appLink" required placeholder="如：https://xxx.com">
+                </div>
+                <div class="form-group">
+                    <label>图像URL（选填，建议400x200）</label>
+                    <input type="url" id="appImg" placeholder="如：https://xxx.com/img.jpg">
+                </div>
+                <button type="submit" class="modal-btn">提交投稿</button>
+                <button type="button" id="closeSubmit" class="modal-btn">关闭</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 功能框容器 -->
+    <div class="box-container" id="appContainer">
+        <!-- 1. eewcn -->
+        <div class="box" onclick="window.open('https://wwzg.lanzoum.com/b028n8gra', '_blank')">
+            <h2>eewcn</h2>
+            <p>中国地震预警接受器</p>
+        </div>
+        <!-- 2. KyoshinEewViewer -->
+        <div class="box" onclick="window.open('https://svs.ingen084.net/kyoshineewviewer/', '_blank')">
+            <h2>KyoshinEewViewer</h2>
+            <p></p>
+        </div>
+        <!-- 3. tremv -->
+        <div class="box" onclick="window.open('https://exptech.dev/tremv', '_blank')">
+            <h2>tremv</h2>
+            <p>台湾地震监测器</p>
+        </div>
+        <!-- 4. DPIP -->
+        <div class="box" onclick="window.open('https://exptech.dev/dpip', '_blank')">
+            <h2>DPIP</h2>
+            <p>台湾地震预警可视化</p>
+        </div>
+        <!-- 5. 地牛wake up！ -->
+        <div class="box" onclick="window.open('https://eew.earthquake.tw/', '_blank')">
+            <h2>地牛wake up！</h2>
+            <p>台湾地震速报</p>
+        </div>
+        <!-- 6. JQuake -->
+        <div class="box" onclick="window.open('https://jquake.net/en/', '_blank')">
+            <h2>JQuake</h2>
+            <p>日本紧急地震速报</p>
+        </div>
+        <!-- 7. kiwimonitor -->
+        <div class="box" onclick="window.open('https://kiwimonitor.amebaownd.com/', '_blank')">
+            <h2>kiwimonitor</h2>
+            <p>日本地震监视器</p>
+        </div>
+        <!-- 8. srev网页 -->
+        <div class="box" onclick="window.open('https://kotoho7.github.io/scratch-realtime-earthquake-viewer-page/#:~:text=Error%20Erro', '_blank')">
+            <h2>srev网页</h2>
+            <p>日本地震信息可视化</p>
+        </div>
+        <!-- 9. p2p地震情报 -->
+        <div class="box" onclick="window.open('https://www.p2pquake.net/windows/', '_blank')">
+            <h2>p2p地震情报</h2>
+            <p>日本地震感知情报</p>
+        </div>
+        <!-- 10. globalquake -->
+        <div class="box" onclick="window.open('https://globalquake.net/', '_blank')">
+            <h2>globalquake</h2>
+            <p>全球地震监测</p>
+        </div>
+        <!-- 11. 要石网页 -->
+        <div class="box" onclick="window.open('https://github.com/Lipomoea/kanameishi', '_blank')">
+            <h2>要石网页</h2>
+            <p>中国及日本地震情报</p>
+        </div>
+        <!-- 12. 关于 -->
+        <div class="box" onclick="document.getElementById('aboutModal').classList.remove('hidden')">
+            <h2>关于</h2>
+            <p></p>
+        </div>
+    </div>
+
+    <!-- 投稿按钮 -->
+    <button class="submit-btn" onclick="document.getElementById('submitModal').classList.remove('hidden')">
+        投稿EEW软件
+    </button>
+
+    <script>
+        // 1. 进入弹窗控制
+        document.getElementById('entryBtn').onclick = function() {
+            document.getElementById('entryModal').classList.add('hidden');
+        };
+
+        // 2. 关于弹窗控制
+        document.getElementById('closeAbout').onclick = function() {
+            document.getElementById('aboutModal').classList.add('hidden');
+        };
+
+        // 3. 投稿弹窗控制
+        document.getElementById('closeSubmit').onclick = function() {
+            document.getElementById('submitModal').classList.add('hidden');
+        };
+
+        // 4. 投稿表单提交（核心：将数据发送到GitHub Issues）
+        document.getElementById('submitForm').onsubmit = async function(e) {
+            e.preventDefault(); // 阻止表单默认提交
+            const appName = document.getElementById('appName').value;
+            const appVersion = document.getElementById('appVersion').value;
+            const submitterName = document.getElementById('submitterName').value;
+            const appLink = document.getElementById('appLink').value;
+            const appImg = document.getElementById('appImg').value;
+
+            // 拼接投稿内容（格式：便于后续读取）
+            const issueBody = `
+软件名称：${appName}
+版本号：${appVersion || '未填写'}
+投稿人：${submitterName || '匿名'}
+下载链接：${appLink}
+图像URL：${appImg || '无'}
+            `.trim();
+
+            // 关键：发送请求到GitHub Issues（需替换为你的仓库信息）
+            const GITHUB_TOKEN = '你的GitHub Personal Access Token'; // 后面教程教你获取
+            const REPO_OWNER = '你的GitHub用户名'; // 如：github
+            const REPO_NAME = '你的仓库名'; // 如：eew-site
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        title: `投稿：${appName}`, // Issue标题
+                        body: issueBody, // Issue内容
+                        labels: ['投稿'] // 给Issue加标签，便于筛选
+                    })
+                });
+
+                if (response.ok) {
+                    alert('投稿成功！等待审核后显示');
+                    document.getElementById('submitModal').classList.add('hidden');
+                    this.reset(); // 重置表单
+                } else {
+                    alert('投稿失败，请稍后再试');
+                }
+            } catch (err) {
+                alert('网络错误，投稿失败');
+            }
+        };
+
+        // 5. 加载GitHub Issues中的投稿内容（实时显示）
+        async function loadSubmittedApps() {
+            const REPO_OWNER = '你的GitHub用户名';
+            const REPO_NAME = '你的仓库名';
+
+            try {
+                // 读取带有“投稿”标签的Issue
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=投稿&state=open`);
+                const issues = await response.json();
+                const appContainer = document.getElementById('appContainer');
+
+                // 遍历Issue，生成新的功能框
+                issues.forEach(issue => {
+                    // 从Issue内容中提取数据（按投稿时的格式拆分）
+                    const lines = issue.body.split('\n');
+                    const data = {};
+                    lines.forEach(line => {
+                        const [key, value] = line.split('：');
+                        if (key) data[key.trim()] = value.trim();
+                    });
+
+                    // 跳过数据不完整的投稿
+                    if (!data['软件名称'] || !data['下载链接']) return;
+
+                    // 创建新功能框
+                    const newBox = document.createElement('div');
+                    newBox.className = 'box';
+                    newBox.onclick = () => window.open(data['下载链接'], '_blank');
+                    newBox.innerHTML = `
+                        <h2>${data['软件名称']} ${data['版本号'] ? `(${data['版本号']})` : ''}</h2>
+                        <p>投稿人：${data['投稿人']}</p>
+                    `;
+                    // 插入到容器最前面（新投稿优先显示）
+                    appContainer.insertBefore(newBox, appContainer.firstChild);
+                });
+            } catch (err) {
+                console.log('加载投稿失败：', err);
+            }
+        }
+
+        // 页面加载完成后，自动加载投稿内容
+        window.onload = loadSubmittedApps;
+    </script>
+</body>
+</html>
